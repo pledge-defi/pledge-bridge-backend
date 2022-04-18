@@ -1,0 +1,368 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "bridge",
+    "version": "last",
+    "description": "bridge-api"
+  },
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "bridge",
+      "description": null
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/txsHistory": {
+      "post": {
+        "tags": [
+          "bridge"
+        ],
+        "summary": "交易记录",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "root",
+            "in": "body",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "number"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "number"
+                    },
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "tx_type": {
+                            "type": "string"
+                          },
+                          "src_chain": {
+                            "type": "string"
+                          },
+                          "dest_chain": {
+                            "type": "string"
+                          },
+                          "asset": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "string"
+                          },
+                          "fee": {
+                            "type": "string"
+                          },
+                          "action_at": {
+                            "type": "string"
+                          },
+                          "address": {
+                            "type": "string"
+                          },
+                          "deposit_hash": {
+                            "type": "string"
+                          },
+                          "bridge_hash": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "number"
+                          },
+                          "created_at": {
+                            "type": "string"
+                          },
+                          "updated_at": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "tx_type",
+                          "src_chain",
+                          "dest_chain",
+                          "asset",
+                          "amount",
+                          "fee",
+                          "action_at",
+                          "address",
+                          "deposit_hash",
+                          "bridge_hash",
+                          "status",
+                          "created_at",
+                          "updated_at"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "number"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "number"
+                    },
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "srcChain": {
+                            "type": "string"
+                          },
+                          "destChain": {
+                            "type": "string"
+                          },
+                          "asset": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "string"
+                          },
+                          "fee": {
+                            "type": "string"
+                          },
+                          "time": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "depositHash": {
+                            "type": "string"
+                          },
+                          "bridgeHash": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lockedCountdown": {
+      "post": {
+        "tags": [
+          "bridge"
+        ],
+        "summary": "倒计时",
+        "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "number"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "time": {
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/addTx": {
+      "post": {
+        "tags": [
+          "bridge"
+        ],
+        "summary": "添加交易记录",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "root",
+            "in": "body",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "address": {
+                  "type": "string"
+                },
+                "txType": {
+                  "type": "string"
+                },
+                "asset": {
+                  "type": "string"
+                },
+                "txHash": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "string"
+                },
+                "fee": {
+                  "type": "string"
+                },
+                "src_chain": {
+                  "type": "string"
+                },
+                "dest_chain": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "address",
+                "txType",
+                "asset",
+                "txHash",
+                "amount",
+                "fee",
+                "src_chain",
+                "dest_chain"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "number"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "data": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "data"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/userAssets": {
+      "get": {
+        "tags": [
+          "bridge"
+        ],
+        "summary": "获取assets",
+        "description": "",
+        "consumes": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "type": "string"
+          },
+          {
+            "name": "raw",
+            "in": "body",
+            "description": "raw paramter",
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "number"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "locked_plgr": {
+                      "type": "string"
+                    },
+                    "plgr_can_withdraw": {
+                      "type": "string"
+                    },
+                    "mplgr_can_withdraw": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

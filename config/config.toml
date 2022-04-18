@@ -1,0 +1,72 @@
+[mysql]
+address = "192.168.0.106"
+#address = "127.0.0.1"
+port = "3306"
+db_name = "bridge"
+user_name = "bridge"
+password = "bridge"
+max_open_conns = 0
+max_idle_conns = 0
+max_life_time = 0
+
+[redis]
+#address = "192.168.0.106"
+address = "127.0.0.1"
+port = "6379"
+db_name = "bridge"
+user_name = ""
+password = "bridge"
+max_idle = 0
+max_active = 0
+idle_timeout = 0
+
+[jwt]
+expire_time = 2592000
+secret_key = "243223ffslsfsldfl412fdsfsdf"
+
+[bscnet]
+bridge_token = "0xbde6750a807c9d4d609c809e09a9e177dbe8ecdc"
+net_url = "https://data-seed-prebsc-2-s3.binance.org:8545"
+chain_id = 97
+
+[ethnet]
+bridge_token = "0xae120367a2b2985d1e43965b10b606eaf5473ce8"
+net_url = "https://ropsten.infura.io/v3/f2ff8becef8e40df950e0e827992c5e0"
+chain_id = 3
+
+[contract]
+plgr_token = "0x22E6f32805d2AC7F787ca72b2F0bdbCE1693573b"
+mplgr_token = "0xb7d51b050f2072C2855B21579bB61955Cb484a97"
+contract_admin_token_private_key = "1da17eeca743098a8b9ccf29cfd0ed6719f160df552e4ac33db23c51e66caef4"
+bridge_token_one = "0x100c8DA1f36e6f097778dA71ea6937bBF9f803fB"
+bridge_token_two = "0x4a9b6dd4F7180E30784657fA7e96151AFf71063A"
+bridge_token_three = "0x1a1285b9c5B32F0ae2a45046571dB53092010169"
+
+[env]
+port = "8080"
+is_dev = true
+release_dur_dev = 3600
+
+[task]
+duration = 3600
+
+[threshold]
+bridge_bsc = "90000000000000000000"
+bridge_eth = "90000000000000000000"
+bridge_token_one_bnb = "1000000000000000000"
+bridge_token_one_eth = "100000000000000000"
+bridge_token_two_bnb = "1000000000000000000"
+bridge_token_two_eth = "100000000000000000"
+bridge_token_three_bnb = "1000000000000000000"
+bridge_token_three_eth = "100000000000000000"
+
+
+[email]
+username = "XXXX@gmail.com"
+pwd = "XXXX"
+host = "smtp.gmail.com"
+port = "587"
+from = "pledge beidge <test@gmail.com>"
+subject = "Insufficient balance of bridge account"
+to = ["XXXX@outlook.com"]
+cc = ["XXXX@126.com"]
