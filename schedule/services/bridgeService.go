@@ -7,6 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"io/ioutil"
@@ -70,22 +71,31 @@ func (s *BridgeService) BridgeUpKeep(netUrl, bridgeBSCToken, privateKey string, 
 		NoSend:    false, // Do all transact steps but do not send the transaction
 	}
 
-	tx, err := bridgeBSCContract.ExecuteUpkeep(&transactOpts)
-	log.Logger.Sugar().Info("tx info ", tx)
+	// Underprice and other situations may occur during execution. Retry can solve this problem
+	retry := 3
+	tx := &types.Transaction{}
+	for {
+		tx, err = bridgeBSCContract.ExecuteUpkeep(&transactOpts)
+		log.Logger.Sugar().Info("tx info ", tx)
+		if err != nil {
+			log.Logger.Error(err.Error())
+		}
+		if retry <= 0 || err == nil {
+			break
+		}
+		retry--
+		time.Sleep(time.Second * 2)
+	}
+
+	log.Logger.Info("release PLGR success")
+	// update db
+	where := fmt.Sprintf("bridge_hash='' and tx_type='0' and asset='PLGR'")
+	err = models.NewTxHistory().UpdateBridgeHash(where, tx.Hash().String(), tx.Cost().String())
 	if err != nil {
 		log.Logger.Error(err.Error())
 		return
-	} else {
-		log.Logger.Info("release PLGR success")
-		// update db
-		where := fmt.Sprintf("bridge_hash='' and tx_type='0' and asset='PLGR'")
-		err = models.NewTxHistory().UpdateBridgeHash(where, tx.Hash().String(), tx.Cost().String())
-		if err != nil {
-			log.Logger.Error(err.Error())
-			return
-		}
-		log.Logger.Info("release and update db success")
 	}
+	log.Logger.Info("release and update db success")
 }
 func (s *BridgeService) Ddddddd() {
 
