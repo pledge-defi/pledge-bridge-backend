@@ -72,7 +72,7 @@ func (s *BridgeService) BridgeUpKeep(netUrl, bridgeBSCToken, privateKey string, 
 	}
 
 	// Underprice and other situations may occur during execution. Retry can solve this problem
-	retry := 3
+	retry := 5
 	tx := &types.Transaction{}
 	for {
 		tx, err = bridgeBSCContract.ExecuteUpkeep(&transactOpts)
@@ -84,22 +84,27 @@ func (s *BridgeService) BridgeUpKeep(netUrl, bridgeBSCToken, privateKey string, 
 			break
 		}
 		retry--
-		time.Sleep(time.Second * 2)
+		time.Sleep(time.Minute)
 	}
 
-	log.Logger.Info("release PLGR success")
-	// update db
-	where := fmt.Sprintf("bridge_hash='' and tx_type='0' and asset='PLGR'")
-	err = models.NewTxHistory().UpdateBridgeHash(where, tx.Hash().String(), tx.Cost().String())
-	if err != nil {
-		log.Logger.Error(err.Error())
-		return
+	if err == nil {
+		log.Logger.Info("release PLGR success")
+		// update db
+		where := fmt.Sprintf("bridge_hash='' and tx_type='0' and asset='PLGR'")
+		err = models.NewTxHistory().UpdateBridgeHash(where, tx.Hash().String(), tx.Cost().String())
+		if err != nil {
+			log.Logger.Error(err.Error())
+			return
+		}
+		log.Logger.Info("release and update db success")
 	}
-	log.Logger.Info("release and update db success")
+
 }
-func (s *BridgeService) Ddddddd() {
 
-	fmt.Println(1111)
+// BridgeUpKeepFailed execute failed
+func (s *BridgeService) BridgeUpKeepFailed() {
+
+	fmt.Println("多次尝试后跨链仍然失败")
 }
 
 // KeystoreToPrivateKey import privateKey from keystone file

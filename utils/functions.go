@@ -203,54 +203,62 @@ func Encryption() string {
 	return CreateCaptcha() + CreateCaptcha()
 }
 
-// HttpGet
-//发送GET请求
-//url:请求地址
-//response:请求返回的内容
-func HttpGet(url string) (string, error) {
+func HttpGet(url string, header map[string]string) ([]byte, error) {
 	req, err := http.NewRequest("GET", url, nil)
+	defer func(Body io.ReadCloser) {
+		_ = Body.Close()
+	}(req.Body)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	req.Header.Add("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_16_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36")
+
+	req.Header.Add("content-type", "application/json")
+	for k, v := range header {
+		req.Header.Add(k, v)
+	}
+	client := &http.Client{Timeout: 5 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer func(Body io.ReadCloser) {
+		_ = Body.Close()
+	}(resp.Body)
+
+	return ioutil.ReadAll(resp.Body)
+}
+
+func Post(uri string, header map[string]string, data interface{}, args ...string) ([]byte, error) {
+
+	jsonStr, err := json.Marshal(data)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", uri, bytes.NewBuffer(jsonStr))
+	if err != nil {
+		return nil, err
+	}
+
+	defer func(Body io.ReadCloser) {
+		_ = Body.Close()
+	}(req.Body)
+
+	req.Header.Add("content-type", "application/json")
+	for k, v := range header {
+		req.Header.Add(k, v)
+	}
 
 	client := &http.Client{Timeout: 5 * time.Second}
 	resp, err := client.Do(req)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	defer resp.Body.Close()
-	result, _ := ioutil.ReadAll(resp.Body)
+	defer func(Body io.ReadCloser) {
+		_ = Body.Close()
+	}(resp.Body)
 
-	return string(result), nil
-}
-
-// Post
-//发送POST请求
-//url:请求地址，data:POST请求提交的数据,contentType:请求体格式，如：application/json
-//content:请求放回的内容
-func Post(uri string, data interface{}, args ...string) (content string) {
-
-	jsonStr, _ := json.Marshal(data)
-	req, err := http.NewRequest("POST", uri, bytes.NewBuffer(jsonStr))
-	if err != nil {
-		panic(err)
-	}
-	req.Header.Add("content-type", "application/json")
-
-	defer req.Body.Close()
-
-	client := &http.Client{Timeout: 5 * time.Second}
-	resp, error := client.Do(req)
-	if error != nil {
-		panic(error)
-	}
-	defer resp.Body.Close()
-
-	result, _ := ioutil.ReadAll(resp.Body)
-	content = string(result)
-	fmt.Println("Response:		", string(content))
-	return
+	return ioutil.ReadAll(resp.Body)
 }
 
 // Float64AddToString float64 相加返回 string

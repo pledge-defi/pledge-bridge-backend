@@ -27,6 +27,7 @@ func (s *BalanceMonitor) Monitor() {
 
 	// check bridge-bsc-contract PLGR
 	bridgeBSCBalance, err := s.GetPlgrBalance()
+	fmt.Println(bridgeBSCBalance, err, "---------------")
 	thresholdBridgeBSC, ok := new(big.Int).SetString(config.Config.Threshold.BridgeBsc, 10)
 	if ok && (err == nil) && (bridgeBSCBalance.Cmp(thresholdBridgeBSC) <= 0) {
 		emailBody, err := s.EmailBody(config.Config.Contract.PlgrToken, "PLGR", bridgeBSCBalance.String(), thresholdBridgeBSC.String())
@@ -55,7 +56,7 @@ func (s *BalanceMonitor) Monitor() {
 		}
 	}
 
-	//check bridge account bsc
+	//check chain-bridge account bsc
 	tokenOneBalance, err := s.GetBalance(config.Config.BscNet.NetUrl, config.Config.Contract.BridgeTokenOne)
 	thresholdBridgeTokenOne, ok := new(big.Int).SetString(config.Config.Threshold.BridgeTokenOneBnb, 10)
 	if ok && (err == nil) && (tokenOneBalance.Cmp(thresholdBridgeTokenOne) <= 0) {
@@ -96,7 +97,7 @@ func (s *BalanceMonitor) Monitor() {
 		}
 	}
 
-	//check bridge account eth
+	//check chain-bridge account eth
 	tokenOneBalance, err = s.GetBalance(config.Config.EthNet.NetUrl, config.Config.Contract.BridgeTokenOne)
 	thresholdBridgeTokenOne, ok = new(big.Int).SetString(config.Config.Threshold.BridgeTokenOneEth, 10)
 	if ok && (err == nil) && (tokenOneBalance.Cmp(thresholdBridgeTokenOne) <= 0) {
